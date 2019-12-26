@@ -37,12 +37,9 @@ function find_error($arr_err, $phone, $date){
     preg_match_all($match, $value, $list);
     if(!empty($list[0])){
       $ids_source = select_db($phone, $count, $date);
-    #  var_dump($phone)
-    #  var_dump($ids_source);
       $count++;
       write_report($phone, $ids_source, $date);
-
-    /*  if(!isset($id)){
+      /*  if(!isset($id)){
         $id = $ids_source;
       }
       else{
@@ -50,8 +47,21 @@ function find_error($arr_err, $phone, $date){
       }
       write_report($phone, $id);
   */  }
+  else {
+    $ids_source = select_db($phone, $count, $date);
+    $count++;
+    write_succes($phone, $ids_source, $date);
+  }
     #var_dump($id);
   }
+}
+function write_succes($phone, $string, $date){
+  // code...
+  $fp = fopen('succes.csv', 'a+');
+  fputs($fp, $date." ");
+  fputs($fp, $phone." ");
+  fputs($fp, $string."\n");
+  fclose($fp);
 }
 function write_report($phone, $string, $date){
   // code...
@@ -116,7 +126,7 @@ function load_file(){
   	#echo $file_name;
   	$file='file/'.$file_name;
   	#echo $file;
-  	if (($file != '.') && ($file != '..')){
+  	if (($file != 'file/.') && ($file != 'file/..')){
   		// code...
       var_dump($file);
     parser_file($file);
