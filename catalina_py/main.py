@@ -106,22 +106,18 @@ def save_error(date, phone, error):
     for num, error in enumerate(error_arr, start=1):
         error_reg = re.search(r"(\"error\":\"NotRegistered|\"error\":\"MismatchSenderId\")", error)
         if error_reg:
-            print(error_reg[1])
             ids = get_ids(phone, date, num)
             insert_error(phone, ids, date)
-            #print(error_reg)
-            print(phone, ids)
             write_report(phone, ids)
 
-
-    #    write_report(phone, error)
 def insert_error(phone, ids, date):
-    print(phone, ids, date)
     try:
-        sql = "INSERT INTO source (phone, time, ids) VALUES ('{}', '{}', '{}')".format(phone, date, ids)
+    #    print(phone, ids, date)
+        sql = "INSERT INTO source (phone, time, ids) VALUES (?, ?, ?)"
         connect = conn()
         cur = connect.cursor()
-        cur.execute(sql)
+        with connect:
+            cur.execute(sql, (phone, date, ids))
     except Exception as e:
         print(e)
 
@@ -149,8 +145,8 @@ def get_ids(phone, date, count):
     except Exception as e:
         print(e)
 def write_report(phone, ids):
-
     """     """
+
     string = phone+" "+ids+"\n"
     with open("report-error.log", "a+") as f:
         f.write(string)
