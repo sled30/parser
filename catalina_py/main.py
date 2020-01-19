@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import os
-import sys
+#import sys
 import re
 import time
 import dateutil
@@ -16,19 +16,20 @@ def read_file(file):
 def serialase_date(date):
     """ переводит формат времени в таймштамп"""
     date = dateutil.parser.parse(date)
-    return date.timestamp()
+    date = int(date.timestamp())
+    return date
 def conn():
-    connect = sqlite3.connect('data/mydb')
+    connect = sqlite3.connect('data/mydb') # 'data/mydb'
     return connect
 def create_db():
     """ create structure db """
     create_source = "CREATE TABLE IF NOT EXISTS `source` ( \
 	           `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , \
-            	  `phone` varchar(14) NOT NULL, `status` varchar(3) NOT NULL, \
+            	  `phone` varchar(14) NOT NULL,  \
                   `time` varchar(20) NOT NULL, `ids` varchar(50) NOT NULL)"
     create_ids = "CREATE TABLE IF NOT EXISTS `ids` ( \
               	  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , \
-              	  `phone` varchar(14) NOT NULL, `date` float(20) NOT NULL, \
+              	  `phone` varchar(14) NOT NULL, `date` INTEGER(20) NOT NULL, \
                   `secund` varchar(2) NULL, `status` varchar(2) NULL, \
                   `1_error` varchar(100) NULL, `2_error` varchar(100) NULL, \
                   `3_error` varchar(100) NULL, `4_error` varchar(100) NULL, \
@@ -56,6 +57,7 @@ def create_db():
         connect.execute(create_ids_index)
         connect.close
         return True
+
 def parser(string):
     """
     date.timestamp() возвращает таймштамп
@@ -77,23 +79,8 @@ def parser(string):
             phone = response[2]
             count_error = response[3]
             error = response[4]
+            save_error(date, phone, error)
             return 1
-def serialase_ids():
-    pass
-def update_ids(source, id):
-
-        connect = conn()
-        cur = connect.cursor()
-        with connect:
-            try:
-                #print(sql)
-                connect.execute(sql)
-            except Exception as e:
-                print(sql)
-                print(e)
-
-#    print(explod_ids)
-
 
 def save_source(date, phone, source):
     """сохраняем данные об отправке"""
@@ -104,19 +91,74 @@ def save_source(date, phone, source):
         with connect:
             cur.execute(sql, (phone, date))
             id = cur.lastrowid
-            explod_ids = source.split()
+            explod_ids = source.split(',')
+
             for num, ids in enumerate(explod_ids, start = 1):
                 sql = "update ids set '{}_error' = '{}' where id = {}".format(num, ids, id)
                 cur.execute(sql)
-    #        connect.close()
-            #update_ids(source, id)
 
     except Exception as e:
         print(e)
 def save_lor():
     pass
-def work_sqlite():
-    pass
+def save_error(date, phone, error):
+    error_arr = error.split(',')
+    for num, error in enumerate(error_arr, start=1):
+        error_reg = re.search(r"(\"error\":\"NotRegistered|\"error\":\"MismatchSenderId\")", error)
+        if error_reg:
+            print(error_reg[1])
+            ids = get_ids(phone, date, num)
+            insert_error(phone, ids, date)
+            #print(error_reg)
+            print(phone, ids)
+            write_report(phone, ids)
+
+
+    #    write_report(phone, error)
+def insert_error(phone, ids, date):
+    print(phone, ids, date)
+    try:
+        sql = "INSERT INTO source (phone, time, ids) VALUES ('{}', '{}', '{}')".format(phone, date, ids)
+        connect = conn()
+        cur = connect.cursor()
+        cur.execute(sql)
+    except Exception as e:
+        print(e)
+
+def get_ids(phone, date, count):
+    try:
+        sql = "select `{}_error` from ids where phone='{}' and date BETWEEN '{}' and '{}'".format(count, phone, date-20, date)
+        connect = conn()
+        cur = connect.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        for num, ids_tuple in enumerate(rows, start=1):
+            if num > 1:
+                print("В выборке найдена дополнительная строка с номером: "+phone+"\n")
+                print(sql+"\n")
+            if not ids_tuple[0]:
+                print("в выборке нет данных: "+phone+"\n")
+                print(sql+"\n")
+            if num < 1:
+                print(" на всякий случай 141 стр:"+phone+"\n")
+                print(sql+"\n")
+
+            ids = str(ids_tuple[0])
+            return ids
+
+    except Exception as e:
+        print(e)
+def write_report(phone, ids):
+
+    """     """
+    string = phone+" "+ids+"\n"
+    with open("report-error.log", "a+") as f:
+        f.write(string)
+        f.close
+
+
+
+                                            ######################################################################################################
 
 create_db()
 file_list = os.listdir(path = 'file/')
