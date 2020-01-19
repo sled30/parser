@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import sys
 import re
@@ -17,7 +18,7 @@ def serialase_date(date):
     date = dateutil.parser.parse(date)
     return date.timestamp()
 def conn():
-    connect = sqlite3.connect("db")
+    connect = sqlite3.connect('data/mydb')
     return connect
 def create_db():
     """ create structure db """
@@ -27,7 +28,7 @@ def create_db():
                   `time` varchar(20) NOT NULL, `ids` varchar(50) NOT NULL)"
     create_ids = "CREATE TABLE IF NOT EXISTS `ids` ( \
               	  `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , \
-              	  `phone` varchar(14) NOT NULL, `string_error` varchar(100) NOT NULL, \
+              	  `phone` varchar(14) NOT NULL, `date` float(20) NOT NULL, \
                   `secund` varchar(2) NULL, `status` varchar(2) NULL, \
                   `1_error` varchar(100) NULL, `2_error` varchar(100) NULL, \
                   `3_error` varchar(100) NULL, `4_error` varchar(100) NULL, \
@@ -45,13 +46,16 @@ def create_db():
                   `27_error` varchar(100) NULL, `28_error` varchar(100) NULL, \
                   `29_error` varchar(100) NULL, `30_error` varchar(100) NULL)"
 
+    create_source_index = "CREATE INDEX `phonees` ON `source` (`phone`, `time`)"
+    create_ids_index = "CREATE INDEX `phone` ON `ids` (`phone`, `date`)"
     connect = conn()
-#    connect = sqlite3.connect("db")
     with connect:
-    #    conn = connect.cursor()
         connect.execute(create_source)
         connect.execute(create_ids)
+        connect.execute(create_source_index)
+        connect.execute(create_ids_index)
         connect.close
+        return True
 def parser(string):
     """
     date.timestamp() возвращает таймштамп
@@ -63,6 +67,7 @@ def parser(string):
         date = serialase_date(source[1])
         phone = source[2]
         source_ids = source[3]
+        save_source(date, phone, source_ids)
         return 1
 
     else:
@@ -73,15 +78,47 @@ def parser(string):
             count_error = response[3]
             error = response[4]
             return 1
-
-def save_source():
+def serialase_ids():
     pass
+def update_ids(source, id):
+
+        connect = conn()
+        cur = connect.cursor()
+        with connect:
+            try:
+                #print(sql)
+                connect.execute(sql)
+            except Exception as e:
+                print(sql)
+                print(e)
+
+#    print(explod_ids)
+
+
+def save_source(date, phone, source):
+    """сохраняем данные об отправке"""
+    sql= "INSERT INTO ids (phone, date) VALUES (?, ?)"
+    connect = conn()
+    cur = connect.cursor()
+    try:
+        with connect:
+            cur.execute(sql, (phone, date))
+            id = cur.lastrowid
+            explod_ids = source.split()
+            for num, ids in enumerate(explod_ids, start = 1):
+                sql = "update ids set '{}_error' = '{}' where id = {}".format(num, ids, id)
+                cur.execute(sql)
+    #        connect.close()
+            #update_ids(source, id)
+
+    except Exception as e:
+        print(e)
 def save_lor():
     pass
 def work_sqlite():
     pass
 
 create_db()
-#file_list = os.listdir(path = 'file/')
-#for file in file_list:
-#    read_file(file)
+file_list = os.listdir(path = 'file/')
+for file in file_list:
+    read_file(file)
