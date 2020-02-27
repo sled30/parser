@@ -6,7 +6,10 @@ from selenium.webdriver import Firefox
 from bs4 import BeautifulSoup
 import re
 
-url = "https://agregatoreat.ru/search/p/автобусы/klassifikator-eat-classifier-eat"
+uri = "https://agregatoreat.ru"
+urn = "/search/p/автобусы/klassifikator-eat-classifier-eat"
+url = uri + urn
+
 
 def get_page(url):
     webdriver = "/home/sled/work/coding/parser/avtobus_1/lib/"
@@ -19,8 +22,25 @@ def get_page(url):
 
 def parse_page_to_link(page):
     url_advert = re.findall(r'<a data-v-bd072e2c=\"\" href=\"(/p/.{0,}=Classifier_EAT)', page)
+
     return url_advert
+
+def get_title_advert(page):
+    try:
+        title_advert = re.search(r'class=\"mb20 fs24 mt0 cl-black product-name uppercase\">\n(.{0,})', page)
+
+        return title_advert[1].lstrip()
+
+    except Exception as e:
+        print(e)
+
+
 
 
 source_index_page = get_page(url)
-url_advert = parse_page_to_link(source_index_page)
+urn_adverts = parse_page_to_link(source_index_page)
+
+for urn_advert in urn_adverts:
+    url_advert = uri + urn_advert
+    page_advert = get_page(url_advert)
+    title = get_title_advert(page_advert)
