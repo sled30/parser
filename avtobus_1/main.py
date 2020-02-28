@@ -57,7 +57,15 @@ def get_provisioner(page):
 
     except Exception as e:
         print(e)
+def get_unit(page):
+    try:
+        unit = re.search(r'Единица измерения:\s(.{1,})\n', page)
 
+        return unit[1]
+
+    except Exception as e:
+        print('get_unit')
+        print(e)
 
 source_index_page = get_page(url)
 urn_adverts = parse_page_to_link(source_index_page)
@@ -73,6 +81,9 @@ for urn_advert in urn_adverts:
     eat = get_eat_advert(page_advert)
 
     provisioner = get_provisioner(page_advert)
+
+    unit = get_unit(page_advert)
+    print(unit)
 
     print('#################################################')
 
