@@ -66,6 +66,15 @@ def get_unit(page):
     except Exception as e:
         print('get_unit')
         print(e)
+def get_amount(page):
+    try:
+        amount = re.search(r'Количество:\s(.{1,})\n', page)
+
+        return amount[1]
+
+    except Exception as e:
+        print('get_amount')
+        print(e)
 
 source_index_page = get_page(url)
 urn_adverts = parse_page_to_link(source_index_page)
@@ -84,6 +93,10 @@ for urn_advert in urn_adverts:
 
     unit = get_unit(page_advert)
     print(unit)
+
+    amount = get_amount(page_advert)
+    print(amount)
+
 
     print('#################################################')
 
