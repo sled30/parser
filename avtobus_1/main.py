@@ -29,11 +29,25 @@ def get_title_advert(page):
     try:
         title_advert = re.search(r'class=\"mb20 fs24 mt0 cl-black product-name uppercase\">\n(.{0,})', page)
 
-        return title_advert[1].lstrip()
+        return title_advert[1].strip()
 
     except Exception as e:
         print(e)
+def get_okpd_advert(page):
+    try:
+        okpd = re.search(r'Код по ОКПД2:\s(\d{1,4}.\d{1,4}.\d{1,5}.\d{1,5})', page)
 
+        return okpd
+    except Exception as e:
+        print(e)
+def get_eat_advert(page):
+    try:
+        eat = re.search(r'\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}', page)
+
+        return eat
+
+    except Exception as e:
+        print(e)
 
 
 
@@ -43,4 +57,9 @@ urn_adverts = parse_page_to_link(source_index_page)
 for urn_advert in urn_adverts:
     url_advert = uri + urn_advert
     page_advert = get_page(url_advert)
+    print(page_advert)
     title = get_title_advert(page_advert)
+    okpd = get_okpd_advert(page)
+    eat = get_eat_advert(page)
+    
+    #print(title)
