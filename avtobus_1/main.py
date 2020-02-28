@@ -84,6 +84,16 @@ def get_cost(page):
     except Exception as e:
         print('get_cost')
         print(e)
+def get_date_of_creation(page):
+    try:
+        date = re.search(r'Дата создания:\s(\d{2}.\d{2}.\d{4}\s\d{2}:\d{2}:\d{2})', page)
+
+        return date[1]
+
+
+    except Exception as e:
+        print('get_date_of_creation')
+        print(e)
 
 source_index_page = get_page(url)
 urn_adverts = parse_page_to_link(source_index_page)
@@ -107,7 +117,9 @@ for urn_advert in urn_adverts:
 
     cost = get_cost(page_advert)
 
-    print(cost)
+    date = get_date_of_creation(page_advert)
+
+    print(date)
 
 
     print('#################################################')
