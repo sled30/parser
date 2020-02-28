@@ -42,7 +42,7 @@ def get_okpd_advert(page):
         print(e)
 def get_eat_advert(page):
     try:
-        eat = re.search(r'\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}', page)
+        eat = re.search(r'(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2})', page)
 
         return eat[1]
 
@@ -51,9 +51,8 @@ def get_eat_advert(page):
 def get_provisioner(page):
     try:
         provisioner = re.search(r'Поставщик:\n.{117}\n\s{2,20}(.{1,})', page)
-        print(provisioner[1])
 
-    #    return provisioner[1]
+        return provisioner[1]
 
 
     except Exception as e:
@@ -68,13 +67,13 @@ for urn_advert in urn_adverts:
     page_advert = get_page(url_advert)
     #print(page_advert)
     title = get_title_advert(page_advert)
-    print(title)
-    #okpd = get_okpd_advert(page_advert)
-    #print(okpd)
-    #eat = get_eat_advert(page_advert)
-    #print(eat)
+
+    okpd = get_okpd_advert(page_advert)
+
+    eat = get_eat_advert(page_advert)
+
     provisioner = get_provisioner(page_advert)
-#    print(provisioner)
+
     print('#################################################')
 
     #print(title)
