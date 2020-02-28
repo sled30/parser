@@ -75,6 +75,15 @@ def get_amount(page):
     except Exception as e:
         print('get_amount')
         print(e)
+def get_cost(page):
+    try:
+        cost = re.search(r'price-product">(.{1,})<\/div', page)
+
+        return cost[1]
+
+    except Exception as e:
+        print('get_cost')
+        print(e)
 
 source_index_page = get_page(url)
 urn_adverts = parse_page_to_link(source_index_page)
@@ -92,10 +101,13 @@ for urn_advert in urn_adverts:
     provisioner = get_provisioner(page_advert)
 
     unit = get_unit(page_advert)
-    print(unit)
+    #print(unit)
 
     amount = get_amount(page_advert)
-    print(amount)
+
+    cost = get_cost(page_advert)
+
+    print(cost)
 
 
     print('#################################################')
