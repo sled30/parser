@@ -31,5 +31,7 @@ def get_urn_advert(page):
 
 
 page = get_page(url)
-urn_advert = get_urn_advert(page)
-print(urn_advert)
+urn_adverts = get_urn_advert(page)
+for urn_advert in urn_adverts:
+    url_advert = uri + urn_advert
+    print(url_advert)

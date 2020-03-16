@@ -96,39 +96,42 @@ def get_date_of_creation(page):
         print(e)
 
 source_index_page = get_page(url)
-urn_adverts = parse_page_to_link(source_index_page)
-
-for urn_advert in urn_adverts:
-    url_advert = uri + urn_advert
-    print(url_advert)
-    page_advert = get_page(url_advert)
-    #print(page_advert)
-    title = get_title_advert(page_advert)
-    print(title)
-
-    okpd = get_okpd_advert(page_advert)
-    print(okpd)
-
-    eat = get_eat_advert(page_advert)
-    print(eat)
-
-    provisioner = get_provisioner(page_advert)
-    print(provisioner)
-
-    unit = get_unit(page_advert)
-    print(unit)
-
-    amount = get_amount(page_advert)
-    print(amount)
-
-    cost = get_cost(page_advert)
-    print(cost)
-
-    date = get_date_of_creation(page_advert)
-
-    print(date)
 
 
-    print('#################################################')
 
-    #print(title)
+#urn_adverts = parse_page_to_link(source_index_page)
+
+#for urn_advert in urn_adverts:
+#    url_advert = uri + urn_advert
+#    print(url_advert)
+#    page_advert = get_page(url_advert)
+#    #print(page_advert)
+#    title = get_title_advert(page_advert)
+#    print(title)
+#
+#    okpd = get_okpd_advert(page_advert)
+#    print(okpd)
+#
+#    eat = get_eat_advert(page_advert)
+#    print(eat)
+#
+#    provisioner = get_provisioner(page_advert)
+#    print(provisioner)
+#
+#    unit = get_unit(page_advert)
+#    print(unit)
+#
+#    amount = get_amount(page_advert)
+#    print(amount)
+#
+#    cost = get_cost(page_advert)
+#    print(cost)
+#
+#    date = get_date_of_creation(page_advert)
+#
+#    print(date)
+#
+#
+#    print('#################################################')
+#
+#    #print(title)
