@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import re
 
 uri = "https://agregatoreat.ru"
-urn = "/search/p/автобусы/klassifikator-eat-classifier-eat"
+urn = "/purchases/new"
 url = uri + urn
 
 
@@ -20,118 +20,19 @@ def get_page(url):
 
     return data
 
-def parse_page_to_link(page):
-    url_advert = re.findall(r'<a data-v-bd072e2c=\"\" href=\"(/p/.{0,}=Classifier_EAT)', page)
-
-    return url_advert
-
-def get_title_advert(page):
+def parse_first_page(page):
     try:
-        title_advert = re.search(r'class=\"mb20 fs24 mt0 cl-black product-name uppercase\">\n(.{0,})', page)
-
-        return title_advert[1].strip()
-
+        first_date_advert = re.findall(r'<\/div><\/span><\/div><div data-\w{1}-[a-z,0-9]{8,9}.{178}Стартовая&nbsp;цена:.{63}(\d{1,6},.{0,2}&nbsp;руб).{100,}href=\"(\/purchase\/\d{3,}\/order-info)\".{30,}(\d{18}).{50,}Статус закупки:.{40,67}>(\D{4,})</div><!.{231}([^\d<,]{2,}).{4,}>([А-Я .-]{3,}).{30,}контракта: (\d{2}.\d{2}.\d{2})', page)
+        return first_date_advert
     except Exception as e:
+        print('parse_first_page')
         print(e)
-def get_okpd_advert(page):
-    try:
-        okpd = re.search(r'Код по ОКПД2:\s(\d{1,4}.\d{1,4}.\d{1,5}.\d{1,5})', page)
 
-        return okpd[1]
-    except Exception as e:
-        print(e)
-def get_eat_advert(page):
-    try:
-        eat = re.search(r'(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2}-\d{1,2})', page)
-
-        return eat[1]
-
-    except Exception as e:
-        print(e)
-def get_provisioner(page):
-    try:
-        provisioner = re.search(r'Поставщик:\n.{117}\n\s{2,20}(.{1,})', page)
-
-        return provisioner[1]
-
-
-    except Exception as e:
-        print(e)
-def get_unit(page):
-    try:
-        unit = re.search(r'Единица измерения:\s(.{1,})\n', page)
-
-        return unit[1]
-
-    except Exception as e:
-        print('get_unit')
-        print(e)
-def get_amount(page):
-    try:
-        amount = re.search(r'Количество:\s(.{1,})\n', page)
-
-        return amount[1]
-
-    except Exception as e:
-        print('get_amount')
-        print(e)
-def get_cost(page):
-    try:
-        cost = re.search(r'price-product">(.{1,})<\/div', page)
-
-        return cost[1]
-
-    except Exception as e:
-        print('get_cost')
-        print(e)
-def get_date_of_creation(page):
-    try:
-        date = re.search(r'Дата создания:\s(\d{2}.\d{2}.\d{4}\s\d{2}:\d{2}:\d{2})', page)
-
-        return date[1]
-
-
-    except Exception as e:
-        print('get_date_of_creation')
-        print(e)
+def parse_advisor(url):
+    pass
 
 source_index_page = get_page(url)
+first_date = parse_first_page(source_index_page)
 
-
-
-#urn_adverts = parse_page_to_link(source_index_page)
-
-#for urn_advert in urn_adverts:
-#    url_advert = uri + urn_advert
-#    print(url_advert)
-#    page_advert = get_page(url_advert)
-#    #print(page_advert)
-#    title = get_title_advert(page_advert)
-#    print(title)
-#
-#    okpd = get_okpd_advert(page_advert)
-#    print(okpd)
-#
-#    eat = get_eat_advert(page_advert)
-#    print(eat)
-#
-#    provisioner = get_provisioner(page_advert)
-#    print(provisioner)
-#
-#    unit = get_unit(page_advert)
-#    print(unit)
-#
-#    amount = get_amount(page_advert)
-#    print(amount)
-#
-#    cost = get_cost(page_advert)
-#    print(cost)
-#
-#    date = get_date_of_creation(page_advert)
-#
-#    print(date)
-#
-#
-#    print('#################################################')
-#
-#    #print(title)
+for date in first_date:
+    print(date[4])
