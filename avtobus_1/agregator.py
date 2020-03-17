@@ -140,6 +140,7 @@ def get_advert_info(advert_page):
     source_advert = get_page("https://agregatoreat.ru" + advert_page[6])
     name_company = get_name_company(source_advert)
     advert_text = get_advert_text(source_advert)
+    advert_type = get_advert_type(source_advert)
 
 
 def logic_work():
@@ -176,13 +177,17 @@ def parse_date(source_index_page):
 
 def get_name_company(page):
     name_company = re.search(r'Наименование</div>.{179}([а-яА-Я \"-]{3,})', page)
-    print(name_company[1])
+
     return name_company[1]
 def get_advert_text(page):
     advert_text = re.search(r'Наименование закупки.{87}>(.{1,300})</div><!--', page)
-    print(advert_text[1])
 
+    return advert_text[1]
 
+def get_advert_type(page):
+    advert_type = re.search(r'Тип закупки.{69}(.{10,100})</div><!', page)
+    print(advert_type[1])
+    return advert_type[1]
 
 
 
