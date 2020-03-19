@@ -1,16 +1,22 @@
 #!/usr/bin/python
-from selenium.webdriver import Firefox
+#from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
+
 # import requests
 # from requests import Response
-# from selenium import webdriver
+from selenium import webdriver
+
 from bs4 import BeautifulSoup
 import re
 import time
 import sqlite3
 
 def get_page(url):
-    webdriver = "/home/sled/work/coding/parser/avtobus_1/lib/"
-    driver = Firefox(webdriver)
+    options = Options()
+    options.headless = True
+#    webdriver = "/home/sled/work/coding/parser/avtobus_1/lib/"
+    driver = webdriver.Firefox(options = options, executable_path=r'/home/sled/work/coding/parser/avtobus_1/lib/geckodriver')
+#    driver = Firefox(webdriver)
     driver.get(url)
     data = driver.page_source
     driver.close()
