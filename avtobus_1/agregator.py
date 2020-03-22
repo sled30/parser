@@ -34,10 +34,13 @@ def parse_first_page(page):
 
 def get_max_num_page(date):
     try:
-
         max_num_page = re.search(r'item cursor-pointer px13 last\">(\d{1,3})', date)
 
-        return int(max_num_page[1])
+        if max_num_page is None:
+            return 1
+        else:
+            return int(max_num_page[1])
+
 
     except Exception as e:
         print('get_max_num_page(date)')
@@ -131,6 +134,10 @@ def check_need_info(title):
         if find:
             return 1
 
+        find = re.search(r'ремонт' , title)
+        if find:
+            return 1
+
     except Exception as e:
         print('Error check_need_info(title) ')
         print(e)
@@ -158,17 +165,15 @@ def get_advert_info(advert_page):
     save_date(date)
 
 def save_date(date):
-    print(date[0])
+
     status = get_check_save_avert(date[0])
-    print(status)
+
     if status == True:
 
-        print('save')
-        print(date, " \n")
+
         insert_agregator(date)
-    #insert_agregator(date)
-    else:
-        print(date[0], " not saved")
+
+
 
 
 def logic_work():
@@ -181,7 +186,9 @@ def logic_work():
 
     try:
         source_index_page = get_page(url)
+
         if source_index_page:
+
             max_page = get_max_num_page(source_index_page)
             parse_date(source_index_page)
             for number in range(2, max_page):
@@ -195,6 +202,7 @@ def logic_work():
 def parse_date(source_index_page):
 
     first_date = parse_first_page(source_index_page)
+
     for date in first_date:
 
         status = check_need_info(date[3])
@@ -205,8 +213,6 @@ def get_name_company(page):
     try:
 
         name_company = re.search(r'Наименование</div>.{170,179}\">([а-яА-Я \"-]{3,})<', page)
-
-
 
         if name_company[1] is None:
             name_company[1] = "No get date"
@@ -265,7 +271,7 @@ def get_region(source_advert):
     except Exception as e:
         raise
 def conn():
-    connect = sqlite3.connect('data/storageDB') # 'data/mydb'
+    connect = sqlite3.connect('data/storageDB')
     return connect
 def get_check_save_avert(number_advert):
 
@@ -285,23 +291,10 @@ def get_check_save_avert(number_advert):
 
     except Exception as e:
         print(e)
-    #    for num, ids_tuple in enumerate(rows, start=1):
-    #        if num > 1:
-    #            print("В выборке найдена дополнительная строка с номером: "+phone+"\n")
-    #            print(sql+"\n")
-    #        if not ids_tuple[0]:
-    #            print("в выборке нет данных: "+phone+"\n")
-    #            print(sql+"\n")
-    #        if num < 1:
-    #            print(" на всякий случай 141 стр:"+phone+"\n")
-    #            print(sql+"\n")
 
-    #        ids = str(ids_tuple[0])
-    #        return ids
 
 def insert_agregator(date):
     try:
-        print(date)
 
         sql = "INSERT INTO agregator (number_advert, \
                                       advert_text, \
@@ -331,6 +324,3 @@ def insert_agregator(date):
 #
 #############################################################################################################################################################
 logic_work()
-
-
-#    parse_date(source_index_page, link)
