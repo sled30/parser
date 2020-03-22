@@ -18,6 +18,16 @@ def open_sheet():
     sheet = client.open('Работа с тендерами').sheet1
 
     return sheet
+
+def check_row_in_sheet(number):
+    """    """
+    sheet = open_sheet()
+    find = sheet.findall(number)
+    if len(find) > 0:
+        return False
+    else:
+        return True
+
 def save_report_agregator():
     """    """
     dates = db.get_agregator()
@@ -25,9 +35,13 @@ def save_report_agregator():
     sheets = open_sheet()
 
     for date in dates:
-        sheets.insert_row(date)
+        status = check_row_in_sheet(date[0])
+        
+        if status == True:
+            sheets.insert_row(date)
 
-
+        else:
+            pass
 
 def main():
     """   """
