@@ -24,13 +24,11 @@ def create_db_agregator():
 
 
     create_source_index = "CREATE INDEX `number_advert` ON `agregator` (`number_advert`)"
-#    create_ids_index = "CREATE INDEX `phone` ON `ids` (`phone`, `date`)"
+
     connect = conn()
     with connect:
         connect.execute(create_source)
-    #    connect.execute(create_ids)
         connect.execute(create_source_index)
-    #    connect.execute(create_ids_index)
         connect.close
         return True
 
@@ -64,6 +62,33 @@ def create_db_b2b():
 
         connect.close
         return True
+def create_db_zakupki():
+    create_source = "CREATE TABLE IF NOT EXISTS `zakupki` ( \
+	           `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL , \
+                  `number_advert` varchar(20) NOT NULL, \
+            	  `advert_text` varchar(20) NULL,  \
+                  `short_text_advert` varchar(50), \
+                  `name_organisation` varchar(50) NOT NULL, \
+                  `long_text_advert` varchar(50) NULL,  \
+                  `advert_type` varchar(20), \
+                  `createtion_date` varchar(50) NOT NULL, \
+                  `end_advert_date` varchar(50) NOT NULL, \
+                  `region` varchar(50) NOT NULL, \
+                  `status` varchar(2), \
+                  `date_of_conclusion` varchar(50), \
+                  `url` varchar(50) NOT NULL, `actual` varchar(50)) "
+
+
+    create_source_index = "CREATE INDEX `number_zakupki` ON `zakupki` (`number_advert`)"
+
+    connect = conn()
+    with connect:
+        connect.execute(create_source)
+
+        connect.execute(create_source_index)
+
+        connect.close
+        return True
 def save_b2b(date):
     try:
 
@@ -77,15 +102,6 @@ def save_b2b(date):
                                       url) \
                                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
 
-                                    #  ('Мониторинг рынка цен № 1473345 \n', +++ number_advert date[0]
-                                     #  'запчасти для ремонта ', +++++ advert_text  date[1]
-                                     #  'ООО "ЛЕНИНГРАДСКАЯ АЭС-АВТО"', ++++ name_organisation [2]
-                                      # '17.03.2020 13:41', ++++ createtion_date [3]
-                                     #  '26.03.2020 23:59', ++++++ end_advert_date [4]
-                                    #   Не найдено', ++++++ status [5]
-                                     #  'https://www.b2b-center.ru/market/zapchasti-dlia-remonta-avtobusov-paz/tender-1473345/') ++++ url [6]
-
-
         connect = conn()
         cur = connect.cursor()
         with connect:
@@ -93,6 +109,30 @@ def save_b2b(date):
         connect.close
     except Exception as e:
         print(e)
+
+def save_zakupki(date):
+    status = check_save_zakupki(number_advert)
+    if status == True:
+        try:
+            sql = "INSERT INTO zakupki (number_advert, \
+                                          advert_text, \
+                                          name_organisation, \
+                                          createtion_date, \
+                                          end_advert_date, \
+                                          actual, \
+                                          region, \
+                                          url, \
+                                          status) \
+                                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+
+            connect = conn()
+            cur = connect.cursor()
+            with connect:
+                cur.execute(sql, ( date[0], date[1], date[2], date[4], date[5], '1', date[3], date[0], date[6]))
+            connect.close
+        except Exception as e:
+            print(e)
+
 
 
 def get_agregator():
@@ -137,8 +177,6 @@ def get_b2b():
                       `actual` \
                       from b2b"
 
-
-    #    sql = "select `number_advert` from agregator where number_advert='{}'".format(number_advert)
         connect = conn()
         cur = connect.cursor()
         cur.execute(sql)
@@ -168,5 +206,23 @@ def check_save_b2b(number_advert):
     except Exception as e:
         print(e)
 
+def check_save_zakupki(number_advert):
+
+    try:
+        sql = "select `number_advert` from zakupki where number_advert='{}'".format(number_advert)
+        connect = conn()
+        cur = connect.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        len_rows = len(rows)
+        if len_rows == 0:
+            return True
+        else:
+             return False
+
+        connect.close
+
+    except Exception as e:
+        print(e)
 def main():
     pass
