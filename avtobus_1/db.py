@@ -111,7 +111,7 @@ def save_b2b(date):
         print(e)
 
 def save_zakupki(date):
-    status = check_save_zakupki(number_advert)
+    status = check_save_zakupki(date[0])
     if status == True:
         try:
             sql = "INSERT INTO zakupki (number_advert, \

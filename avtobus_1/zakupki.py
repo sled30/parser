@@ -62,9 +62,11 @@ def logic_zakupki(link, state, phase):
     page = commun.get_page(link)
 
     status = check_find_page(page, link)
+
     if status == False:
 
         return False
+    #status_find = commun.check_need_info()
 
     info = parse_global_info(status)
 
@@ -73,19 +75,28 @@ def logic_zakupki(link, state, phase):
         if info:
 
             for row in info:
-                date_advert = serialize_date(row[4])
-                date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
+                status_load = commun.check_need_info(row[0])
+                print(row[0])
+                print(status_load)
+                if status_load == True:
+                    date_advert = serialize_date(row[4])
+                    date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
 
-                db.save_zakupki(date)
+                    db.save_zakupki(date)
+
 
         return max_page
     elif state == 'loader':
         if info:
             for row in info:
-                date_advert = serialize_date(row[4])
-                date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
+                status_load = commun.check_need_info(row[0])
+                if status_load == True:
+                    date_advert = serialize_date(row[4])
+                    date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
 
-                db.save_zakupki(date)
+                    db.save_zakupki(date)
+
+
 
 
 def phase_1():
@@ -105,7 +116,7 @@ def phase_1():
 #        print('#################################')
 #        print('#################################')
 #        print(search)
-    #    print(link)
+#        print(link)
 #        print('#################################')
 #        print('#################################')
 
@@ -135,7 +146,7 @@ def phase_2():
 #        print('#################################')
 #        print('#################################')
 #        print(search)
-    #    print(link)
+#        print(link)
 #        print('#################################')
 #        print('#################################')
 
@@ -194,7 +205,7 @@ def phase_4():
 #        print('#################################')
 #        print('#################################')
 #        print(search)
-    #    print(link)
+#        print(link)
 #        print('#################################')
 #        print('#################################')
 
