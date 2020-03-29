@@ -75,26 +75,26 @@ def logic_zakupki(link, state, phase):
         if info:
 
             for row in info:
-                status_load = commun.check_need_info(row[0])
-                print(row[0])
-                print(status_load)
-                if status_load == True:
-                    date_advert = serialize_date(row[4])
-                    date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
 
-                    db.save_zakupki(date)
+                date_advert = serialize_date(row[4])
+                date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
+
+                db.save_zakupki(date)
+
+
 
 
         return max_page
     elif state == 'loader':
         if info:
             for row in info:
-                status_load = commun.check_need_info(row[0])
-                if status_load == True:
-                    date_advert = serialize_date(row[4])
-                    date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
 
-                    db.save_zakupki(date)
+                date_advert = serialize_date(row[4])
+                date = (row[1], row[0], row[2], row[3], date_advert[0], date_advert[1], phase,)
+
+                db.save_zakupki(date)
+
+
 
 
 
@@ -113,12 +113,12 @@ def phase_1():
 
         link = uri + str(1) + urn1 + urn2
 
-#        print('#################################')
-#        print('#################################')
-#        print(search)
-#        print(link)
-#        print('#################################')
-#        print('#################################')
+        print('#################################')
+        print('#################################')
+        print(search)
+        print(link)
+        print('#################################')
+        print('#################################')
 
         max_page = logic_zakupki(link, 'start', '1')
 
@@ -143,12 +143,12 @@ def phase_2():
 
         link = uri + str(1) + urn1 + urn2
 
-#        print('#################################')
-#        print('#################################')
-#        print(search)
-#        print(link)
-#        print('#################################')
-#        print('#################################')
+        print('#################################')
+        print('#################################')
+        print(search)
+        print(link)
+        print('#################################')
+        print('#################################')
 
         max_page = logic_zakupki(link, 'start', '2')
 
@@ -173,12 +173,12 @@ def phase_3():
 
         link = uri + str(1) + urn1 + urn2
 
-#        print('#################################')
-#        print('#################################')
-#        print(search)
-#        print(link)
-#        print('#################################')
-#        print('#################################')
+        print('#################################')
+        print('#################################')
+        print(search)
+        print(link)
+        print('#################################')
+        print('#################################')
 
         max_page = logic_zakupki(link, 'start', '3')
 
@@ -202,12 +202,12 @@ def phase_4():
 
         link = uri + str(1) + urn1 + urn2
 
-#        print('#################################')
-#        print('#################################')
-#        print(search)
-#        print(link)
-#        print('#################################')
-#        print('#################################')
+        print('#################################')
+        print('#################################')
+        print(search)
+        print(link)
+        print('#################################')
+        print('#################################')
 
         max_page = logic_zakupki(link, 'start', '4')
 

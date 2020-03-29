@@ -187,9 +187,35 @@ def get_b2b():
     except Exception as e:
         print(e)
 
+
+def get_zakupki():
+    """         """
+    try:
+        sql = "SELECT `number_advert`, \
+                      `advert_text`, \
+                      `name_organisation`, \
+                      `createtion_date`, \
+                      `end_advert_date`, \
+                      `region`, \
+                      `status`, \
+                      `actual` \
+                      from zakupki"
+
+        connect = conn()
+        cur = connect.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        return rows
+        connect.close
+
+    except Exception as e:
+        pirnt('error from get_zakupki()')
+        print(e)
+
 def check_save_b2b(number_advert):
 
     try:
+
         sql = "select `number_advert` from b2b where number_advert='{}'".format(number_advert)
         connect = conn()
         cur = connect.cursor()

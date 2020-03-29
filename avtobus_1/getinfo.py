@@ -16,6 +16,8 @@ def get_time():
     tomorrow = timedelta(days = 1)
     date = curent_date - tomorrow
 
+#    return ('23.03.2020', '29.03.2020')
+
     return (date.strftime("%d.%m.%Y"), curent_date.strftime("%d.%m.%Y"))
 
 

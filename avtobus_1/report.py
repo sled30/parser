@@ -1,6 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import db
+import time
 
 # use creds to create a client to interact with the Google Drive API
 
@@ -15,9 +16,42 @@ def aut_sheet():
 def open_sheet():
     """     """
     client = aut_sheet()
-    sheet = client.open('Работа с тендерами').sheet1
+    sheet = client.open('Работа с тендерами').sheet2
+
+
 
     return sheet
+
+def open_phase_1():
+    """     """
+    client = aut_sheet()
+    sheet = client.open('Работа с тендерами').worksheet('фаза 1')
+
+    return sheet_phase
+
+def open_phase_2():
+    """     """
+    client = aut_sheet()
+
+    sheet = client.open('Работа с тендерами').worksheet('фаза 2')
+
+    return sheet_phase
+
+def open_phase_3():
+    """     """
+    client = aut_sheet()
+
+    sheet = client.open('Работа с тендерами').worksheet('фаза 3')
+
+    return sheet_phase
+
+def open_phase_4():
+    """     """
+    client = aut_sheet()
+
+    sheet = client.open('Работа с тендерами').worksheet('фаза 4')
+
+    return sheet_phase
 
 def check_row_in_sheet(number):
     """    """
@@ -27,6 +61,16 @@ def check_row_in_sheet(number):
         return False
     else:
         return True
+def save_report_zakupki():
+    date = db.get_zakupki()
+    sheets = open_sheet()
+
+    for row in date:
+        time.sleep(4)
+        print(row)
+        print(row[6])
+        sheets.insert_row(row)
+
 
 def save_report_agregator():
     """    """
@@ -61,7 +105,8 @@ def main():
     """   """
 
     #save_report_agregator()
-    save_report_b2b()
+#    save_report_b2b()
+    save_report_zakupki()
 
 #########################################################################################################################
 #########################################################################################################################
